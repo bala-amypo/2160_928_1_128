@@ -1,21 +1,11 @@
 package com.example.demo.repository;
 
-import java.util.*;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entity.HoldingRecord;
+import com.example.demo.entity.enums.AssetClassType;
 
-public class HoldingRecordRepository {
-    private Map<Long, HoldingRecord> db = new HashMap<>();
-
-    public HoldingRecord save(HoldingRecord h) {
-        db.put(h.getId(), h);
-        return h;
-    }
-
-    public Optional<HoldingRecord> findById(Long id) {
-        return Optional.ofNullable(db.get(id));
-    }
-
-    public List<HoldingRecord> findAll() {
-        return new ArrayList<>(db.values());
-    }
+public interface HoldingRecordRepository extends JpaRepository<HoldingRecord, Long> {
+    List<HoldingRecord> findByInvestorId(Long investorId);
+    List<HoldingRecord> findByInvestorIdAndAssetClass(Long investorId, AssetClassType assetClass);
 }
