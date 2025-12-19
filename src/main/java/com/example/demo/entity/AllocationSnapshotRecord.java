@@ -10,15 +10,28 @@ public class AllocationSnapshotRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double totalValue;
-    private LocalDateTime snapshotTime;
+    private Long investorId;
 
+    private LocalDateTime snapshotDate = LocalDateTime.now();
+
+    private Double totalPortfolioValue;
+
+    @Column(length = 1000)
+    private String allocationJson;
+
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Double getTotalValue() { return totalValue; }
-    public void setTotalValue(Double totalValue) { this.totalValue = totalValue; }
+    public Long getInvestorId() { return investorId; }
+    public void setInvestorId(Long investorId) { this.investorId = investorId; }
 
-    public LocalDateTime getSnapshotTime() { return snapshotTime; }
-    public void setSnapshotTime(LocalDateTime snapshotTime) { this.snapshotTime = snapshotTime; }
+    public LocalDateTime getSnapshotDate() { return snapshotDate; }
+    public void setSnapshotDate(LocalDateTime snapshotDate) { this.snapshotDate = snapshotDate; }
+
+    public Double getTotalPortfolioValue() { return totalPortfolioValue; }
+    public void setTotalPortfolioValue(Double totalPortfolioValue) { this.totalPortfolioValue = totalPortfolioValue; }
+
+    public String getAllocationJson() { return allocationJson; }
+    public void setAllocationJson(String allocationJson) { this.allocationJson = allocationJson; }
 }
