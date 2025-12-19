@@ -1,51 +1,31 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.entity.UserAccount;
-import com.example.demo.repository.UserAccountRepository;
-import com.example.demo.security.JwtUtil;
+import com.example.demo.entity.User;
+import com.example.demo.entity.enums.RoleType;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private UserAccountRepository userRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-        UserAccount user = new UserAccount();
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
-        userRepository.save(user);
-        return "User registered successfully";
-    }
+    private UserRepository userRepository;
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        Optional<UserAccount> userOptional = userRepository.findByEmail(request.getEmail());
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+    public AuthResponse login(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
 
-        UserAccount user = userOptional.get();
+        // Convert RoleType to String for AuthResponse
+        String roleString = user.getRole().name();
 
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
-
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
-
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+        return new AuthResponse(
+                user.getUsername(),
+                user.getId(),
+                user.getEmail(),
+                roleString
+        );
     }
 }
