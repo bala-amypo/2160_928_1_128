@@ -9,29 +9,16 @@ public class InvestorProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String investorId;
-
-    private String fullName;
-
-    @Column(unique = true)
+    private String investorName;
     private String email;
-
-    private Boolean active = true;
 
     // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getInvestorId() { return investorId; }
-    public void setInvestorId(String investorId) { this.investorId = investorId; }
-
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getInvestorName() { return investorName; }
+    public void setInvestorName(String investorName) { this.investorName = investorName; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
 }
