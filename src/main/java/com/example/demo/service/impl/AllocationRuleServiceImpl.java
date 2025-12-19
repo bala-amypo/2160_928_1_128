@@ -24,7 +24,6 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
         AssetClassAllocationRule existingRule = repository.findById(id).orElseThrow(
                 () -> new RuntimeException("Rule not found with id: " + id)
         );
-        // update fields
         existingRule.setName(rule.getName());
         existingRule.setTargetAllocation(rule.getTargetAllocation());
         existingRule.setActive(rule.isActive());
