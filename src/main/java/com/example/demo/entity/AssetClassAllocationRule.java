@@ -1,37 +1,41 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.enums.AssetClassType;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "asset_class_allocation_rules")
 public class AssetClassAllocationRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long investorId;
+    @Column(nullable = false)
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    private AssetClassType assetClass;
+    @Column(nullable = false)
+    private double targetAllocation;
 
-    private Double targetPercentage;
+    @Column(nullable = false)
+    private boolean active;
 
-    private Boolean active = true;
+    @ManyToOne
+    @JoinColumn(name = "investor_id")
+    private UserAccount investor;
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getInvestorId() { return investorId; }
-    public void setInvestorId(Long investorId) { this.investorId = investorId; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public AssetClassType getAssetClass() { return assetClass; }
-    public void setAssetClass(AssetClassType assetClass) { this.assetClass = assetClass; }
+    public double getTargetAllocation() { return targetAllocation; }
+    public void setTargetAllocation(double targetAllocation) { this.targetAllocation = targetAllocation; }
 
-    public Double getTargetPercentage() { return targetPercentage; }
-    public void setTargetPercentage(Double targetPercentage) { this.targetPercentage = targetPercentage; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public UserAccount getInvestor() { return investor; }
+    public void setInvestor(UserAccount investor) { this.investor = investor; }
 }
