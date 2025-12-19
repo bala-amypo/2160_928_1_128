@@ -1,25 +1,18 @@
 package com.example.demo.config;
 
-import com.example.demo.security.JwtAuthFilter;
+import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 @Configuration
 public class JwtFilterConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-
-    public JwtFilterConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
-
     @Bean
-    public JwtAuthFilter jwtAuthFilter() {
-        return jwtAuthFilter;
-    }
-
-    public Class<? extends UsernamePasswordAuthenticationFilter> beforeFilter() {
-        return UsernamePasswordAuthenticationFilter.class;
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter(JwtAuthenticationFilter filter) {
+        FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(filter);
+        registrationBean.addUrlPatterns("/api/*"); // apply filter to API endpoints
+        return registrationBean;
     }
 }
