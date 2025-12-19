@@ -12,13 +12,15 @@ import com.example.demo.service.UserAccountService;
 @RequestMapping("/api/users")
 public class UserAccountController {
 
-    @Autowired
-    private UserAccountService service;
+   @Autowired
+private UserAccountService service;
 
-    @PostMapping("/register")
-    public UserAccount register(@RequestBody UserAccount user) {
-        return service.register(user);
-    }
+@PostMapping("/register")
+public ResponseEntity<UserAccount> register(@RequestBody UserAccount user) {
+    UserAccount savedUser = service.register(user);
+    return ResponseEntity.ok(savedUser);
+}
+
 
     @GetMapping
     public List<UserAccount> getAllUsers() {
