@@ -4,58 +4,48 @@ import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
+import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
-import com.example.demo.service.UserAccountService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserAccountService userService;
-    private final JwtUtil jwtUtil;
-    private final PasswordEncoder encoder;
+    @Autowired
+    private UserAccountRepository userRepository;
 
-    public AuthController(
-            UserAccountService userService,
-            JwtUtil jwtUtil,
-            PasswordEncoder encoder
-    ) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.encoder = encoder;
-    }
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public UserAccount register(@RequestBody RegisterRequest req) {
+    public String register(@RequestBody RegisterRequest request) {
         UserAccount user = new UserAccount();
-        user.setUsername(req.getUsername());
-        user.setEmail(req.getEmail());
-        user.setPassword(req.getPassword());
-        user.setRole(req.getRole());
-        return userService.register(user);
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+        userRepository.save(user);
+        return "User registered successfully";
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest req) {
-        UserAccount user = userService.findByEmail(req.getEmail());
-
-        if (!encoder.matches(req.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+    public AuthResponse login(@RequestBody AuthRequest request) {
+        Optional<UserAccount> userOptional = userRepository.findByEmail(request.getEmail());
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException("User not found");
         }
 
-        String token = jwtUtil.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRole().name()
-        );
+        UserAccount user = userOptional.get();
 
-        return new AuthResponse(
-                token,
-                user.getId(),
-                user.getEmail(),
-                user.getRole().name()
-        );
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 }
