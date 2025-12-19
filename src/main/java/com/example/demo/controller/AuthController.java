@@ -15,17 +15,18 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestParam String username) {
-        User user = userRepository.findByUsername(username);
+public AuthResponse login(@RequestParam String username) {
+    User user = userRepository.findByUsername(username);
 
-        // Convert RoleType to String for AuthResponse
-        String roleString = user.getRole().name();
+    // Example: generate JWT token here
+    String jwtToken = jwtUtil.generateToken(user);
 
-        return new AuthResponse(
-                user.getUsername(),
-                user.getId(),
-                user.getEmail(),
-                roleString
-        );
-    }
+    return new AuthResponse(
+            jwtToken,
+            user.getId(),
+            user.getEmail(),
+            user.getRole().name()  // convert enum to String
+    );
+}
+
 }

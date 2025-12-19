@@ -6,6 +6,17 @@ public class AuthResponse {
     private String email;
     private String role;
 
+    // Constructor to initialize all fields
+    public AuthResponse(String token, Long userId, String email, String role) {
+        this.token = token;
+        this.userId = userId;
+        this.email = email;
+        this.role = role;
+    }
+
+    // Default constructor
+    public AuthResponse() {}
+
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
     public Long getUserId() { return userId; }
