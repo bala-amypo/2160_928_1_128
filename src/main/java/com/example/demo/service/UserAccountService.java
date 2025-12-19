@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.UserAccount;
 import java.util.List;
 import java.util.Optional;
-import com.example.demo.entity.UserAccount;
 
 public interface UserAccountService {
-    UserAccount register(UserAccount user);
     Optional<UserAccount> findByEmail(String email);
+    Optional<UserAccount> findByUsername(String username);
     List<UserAccount> getAllUsers();
 }

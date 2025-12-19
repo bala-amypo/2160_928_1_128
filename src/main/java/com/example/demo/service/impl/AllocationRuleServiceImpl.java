@@ -14,15 +14,18 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
     @Autowired
     private AssetClassAllocationRuleRepository repository;
 
-    // Implement abstract method from interface
     @Override
     public AssetClassAllocationRule getRuleById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    // Implement abstract method from interface
     @Override
     public List<AssetClassAllocationRule> getActiveRules(Long investorId) {
         return repository.findActiveRules(investorId);
+    }
+
+    @Override
+    public List<AssetClassAllocationRule> getRulesByInvestor(Long investorId) {
+        return repository.findByInvestorId(investorId);
     }
 }
