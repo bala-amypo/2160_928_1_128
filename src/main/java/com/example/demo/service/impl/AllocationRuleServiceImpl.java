@@ -6,8 +6,6 @@ import com.example.demo.service.AllocationRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class AllocationRuleServiceImpl implements AllocationRuleService {
 
@@ -15,7 +13,12 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
     private AssetClassAllocationRuleRepository repository;
 
     @Override
-    public List<AssetClassAllocationRule> getActiveRules(Long investorId) {
-        return repository.findActiveRulesHql(investorId);
+    public AssetClassAllocationRule getRuleById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    // Example additional method
+    public AssetClassAllocationRule findActiveRules(Long investorId) {
+        return repository.findActiveRules(investorId).stream().findFirst().orElse(null);
     }
 }
