@@ -1,49 +1,36 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.InvestorProfile;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.InvestorProfileRepository;
 import com.example.demo.service.InvestorProfileService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class InvestorProfileServiceImpl implements InvestorProfileService {
 
-    private final InvestorProfileRepository repository;
-
-    public InvestorProfileServiceImpl(InvestorProfileRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private InvestorProfileRepository repo;
 
     @Override
     public InvestorProfile createInvestor(InvestorProfile investor) {
-        investor.setActive(true);
-        return repository.save(investor);
+        return repo.save(investor);
     }
 
     @Override
-    public InvestorProfile getInvestorById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Investor not found"));
+    public Optional<InvestorProfile> getInvestorById(Long id) {
+        return repo.findById(id);
     }
 
     @Override
-    public InvestorProfile findByInvestorId(String investorId) {
-        return repository.findByInvestorId(investorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Investor not found"));
+    public Optional<InvestorProfile> findByInvestorId(String investorId) {
+        return repo.findByInvestorId(investorId);
     }
 
     @Override
     public List<InvestorProfile> getAllInvestors() {
-        return repository.findAll();
-    }
-
-    @Override
-    public InvestorProfile updateInvestorStatus(Long id, boolean active) {
-        InvestorProfile investor = getInvestorById(id);
-        investor.setActive(active);
-        return repository.save(investor);
+        return repo.findAll();
     }
 }

@@ -1,35 +1,31 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.UserAccount;
-import com.example.demo.entity.enums.RoleType;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
-    private final UserAccountRepository repository;
-    private final PasswordEncoder encoder;
-
-    public UserAccountServiceImpl(UserAccountRepository repository, PasswordEncoder encoder) {
-        this.repository = repository;
-        this.encoder = encoder;
-    }
+    @Autowired
+    private UserAccountRepository repo;
 
     @Override
     public UserAccount register(UserAccount user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        if (user.getRole() == null) {
-            user.setRole(RoleType.INVESTOR);
-        }
-        return repository.save(user);
+        return repo.save(user);
     }
 
     @Override
-    public UserAccount findByEmail(String email) {
-        return repository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Optional<UserAccount> findByEmail(String email) {
+        return repo.findByEmail(email);
+    }
+
+    @Override
+    public List<UserAccount> getAllUsers() {
+        return repo.findAll();
     }
 }
