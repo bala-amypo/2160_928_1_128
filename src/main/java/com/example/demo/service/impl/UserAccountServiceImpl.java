@@ -29,4 +29,10 @@ public class UserAccountServiceImpl implements UserAccountService {
     public List<UserAccount> getAllUsers() {
         return repo.findAll();
     }
+
+    @Override
+    public UserAccount register(UserAccount userAccount) {
+        // Optional: hash password here before saving
+        return repo.save(userAccount);
+    }
 }
