@@ -1,51 +1,42 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.RebalancingAlertRecord;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.RebalancingAlertRecordRepository;
 import com.example.demo.service.RebalancingAlertService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class RebalancingAlertServiceImpl implements RebalancingAlertService {
 
-    private final RebalancingAlertRecordRepository repository;
-
-    public RebalancingAlertServiceImpl(RebalancingAlertRecordRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private RebalancingAlertRecordRepository repo;
 
     @Override
     public RebalancingAlertRecord createAlert(RebalancingAlertRecord alert) {
-        if (alert.getCurrentPercentage() <= alert.getTargetPercentage()) {
-            throw new IllegalArgumentException("currentPercentage > targetPercentage");
-        }
-        alert.setResolved(false);
-        return repository.save(alert);
+        return repo.save(alert);
     }
 
     @Override
     public RebalancingAlertRecord resolveAlert(Long id) {
-        RebalancingAlertRecord alert = getAlertById(id);
-        alert.setResolved(true);
-        return repository.save(alert);
+        Optional<RebalancingAlertRecord> opt = repo.findById(id);
+        if(opt.isPresent()) {
+            RebalancingAlertRecord alert = opt.get();
+            alert.setResolved(true);
+            return repo.save(alert);
+        }
+        return null;
+    }
+
+    @Override
+    public Optional<RebalancingAlertRecord> getAlertById(Long id) {
+        return repo.findById(id);
     }
 
     @Override
     public List<RebalancingAlertRecord> getAlertsByInvestor(Long investorId) {
-        return repository.findByInvestorId(investorId);
-    }
-
-    @Override
-    public RebalancingAlertRecord getAlertById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
-    }
-
-    @Override
-    public List<RebalancingAlertRecord> getAllAlerts() {
-        return repository.findAll();
+        return repo.findByInvestorId(investorId);
     }
 }
