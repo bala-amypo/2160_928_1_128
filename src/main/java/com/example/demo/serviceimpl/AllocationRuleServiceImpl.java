@@ -16,6 +16,13 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
         this.repository = repository;
     }
 
+    // ✅ REQUIRED method (missing earlier)
+    @Override
+    public List<AssetClassAllocationRule> getAllRules() {
+        return repository.findAll();
+    }
+
+    // ✅ Existing method
     @Override
     public List<AssetClassAllocationRule> getActiveRules(Long investorId) {
         return repository.findActiveRulesHql(investorId);

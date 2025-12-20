@@ -5,6 +5,8 @@ import com.example.demo.repository.InvestorProfileRepository;
 import com.example.demo.service.InvestorProfileService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InvestorProfileServiceImpl implements InvestorProfileService {
 
@@ -15,10 +17,33 @@ public class InvestorProfileServiceImpl implements InvestorProfileService {
     }
 
     @Override
+    public InvestorProfile createInvestor(InvestorProfile profile) {
+        return repository.save(profile);
+    }
+
+    @Override
+    public InvestorProfile getInvestorById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Investor not found with id: " + id));
+    }
+
+    @Override
+    public List<InvestorProfile> getAllInvestors() {
+        return repository.findAll();
+    }
+
+    @Override
     public InvestorProfile getByInvestorId(String investorId) {
         return repository.findByInvestorId(investorId)
                 .orElseThrow(() ->
-                        new RuntimeException("InvestorProfile not found for ID: " + investorId)
-                );
+                        new RuntimeException("Investor not found: " + investorId));
+    }
+
+    @Override
+    public InvestorProfile updateInvestorStatus(Long id, Boolean active) {
+        InvestorProfile profile = getInvestorById(id);
+        profile.setActive(active);
+        return repository.save(profile);
     }
 }
