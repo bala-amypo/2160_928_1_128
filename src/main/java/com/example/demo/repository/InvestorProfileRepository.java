@@ -1,10 +1,13 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.InvestorProfile;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface InvestorProfileRepository extends JpaRepository<InvestorProfile, Long> {
+import com.example.demo.entity.InvestorProfile;
 
-    // REQUIRED by test suite
-    InvestorProfile findByInvestorId(String investorId);
+public interface InvestorProfileRepository
+        extends JpaRepository<InvestorProfile, Long> {
+
+    Optional<InvestorProfile> findByInvestorld(String investorld);
 }

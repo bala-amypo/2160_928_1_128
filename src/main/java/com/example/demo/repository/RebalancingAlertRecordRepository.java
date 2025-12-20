@@ -1,16 +1,15 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.RebalancingAlertRecord;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.example.demo.entity.RebalancingAlertRecord;
 
 public interface RebalancingAlertRecordRepository
         extends JpaRepository<RebalancingAlertRecord, Long> {
 
-    // REQUIRED by test suite
-    List<RebalancingAlertRecord> findByInvestorId(Long investorId);
+    List<RebalancingAlertRecord> findByInvestorld(Long investorld);
 
-    // REQUIRED by test suite
     List<RebalancingAlertRecord> findByResolvedFalse();
 }
