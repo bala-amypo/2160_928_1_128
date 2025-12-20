@@ -17,40 +17,7 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
     }
 
     @Override
-    public AssetClassAllocationRule createRule(AssetClassAllocationRule rule) {
-        if (rule.getTargetPercentage() < 0 || rule.getTargetPercentage() > 100) {
-            throw new RuntimeException("Invalid Percentage: between 0 and 100");
-        }
-        return repository.save(rule);
-    }
-
-    @Override
-    public AssetClassAllocationRule updateRule(Long id, AssetClassAllocationRule updatedRule) {
-        AssetClassAllocationRule rule = getRuleById(id);
-        rule.setAssetClass(updatedRule.getAssetClass());
-        rule.setTargetPercentage(updatedRule.getTargetPercentage());
-        rule.setActive(updatedRule.getActive());
-        return repository.save(rule);
-    }
-
-    @Override
-    public List<AssetClassAllocationRule> getRulesByInvestor(Long investorId) {
-        return repository.findByInvestorId(investorId);
-    }
-
-    @Override
     public List<AssetClassAllocationRule> getActiveRules(Long investorId) {
         return repository.findActiveRulesHql(investorId);
-    }
-
-    @Override
-    public AssetClassAllocationRule getRuleById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entity not found"));
-    }
-
-    @Override
-    public List<AssetClassAllocationRule> getAllRules() {
-        return repository.findAll();
     }
 }
