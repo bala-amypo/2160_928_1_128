@@ -12,7 +12,10 @@ import java.util.List;
 public interface AssetClassAllocationRuleRepository
         extends JpaRepository<AssetClassAllocationRule, Long> {
 
-    // ✅ Custom HQL query
+    // ✅ Get ALL rules for an investor
+    List<AssetClassAllocationRule> findByInvestorId(Long investorId);
+
+    // ✅ Get only ACTIVE rules for an investor
     @Query("SELECT r FROM AssetClassAllocationRule r " +
            "WHERE r.investorId = :investorId AND r.active = true")
     List<AssetClassAllocationRule> findActiveRulesHql(
