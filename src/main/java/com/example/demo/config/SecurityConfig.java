@@ -11,9 +11,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public JwtFilterConfig jwtFilterConfig() {
-        return new JwtFilterConfig();
+    private final JwtFilterConfig jwtFilterConfig;
+
+    // ✅ Constructor Injection (BEST PRACTICE)
+    public SecurityConfig(JwtFilterConfig jwtFilterConfig) {
+        this.jwtFilterConfig = jwtFilterConfig;
     }
 
     @Bean
@@ -26,12 +28,13 @@ public class SecurityConfig {
                         "/auth/**",
                         "/status",
                         "/swagger-ui/**",
+                        "/swagger-ui.html",
                         "/v3/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
-                    jwtFilterConfig(),
+                    jwtFilterConfig,
                     UsernamePasswordAuthenticationFilter.class
             );
 
