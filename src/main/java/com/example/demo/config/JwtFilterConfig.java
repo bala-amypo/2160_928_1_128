@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.stereotype.Component;   // ✅ ADD THIS
 
 import java.io.IOException;
 import java.util.Collections;
 
-@Component   // ✅ THIS IS THE FIX
+@Component
 public class JwtFilterConfig extends OncePerRequestFilter {
 
     @Override
@@ -26,7 +26,6 @@ public class JwtFilterConfig extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
-
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
                             "jwt-user", null, Collections.emptyList());
