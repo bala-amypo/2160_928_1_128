@@ -1,4 +1,4 @@
-package com.example.demo.entity.enums
+package com.example.demo.entity.enums;
 
 /**
  * Asset classes used for portfolio allocation
