@@ -1,9 +1,3 @@
-package com.example.demo.entity;
-
-import com.example.demo.entity.enums.*;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
 @Entity
 public class RebalancingAlertRecord {
 
@@ -42,5 +36,14 @@ public class RebalancingAlertRecord {
         this.resolved = resolved;
     }
 
-    // getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Double getCurrentPercentage() { return currentPercentage; }
+    public Double getTargetPercentage() { return targetPercentage; }
+
+    public Boolean getResolved() { return resolved; }
+    public void setResolved(Boolean resolved) { this.resolved = resolved; }
+
+    public AssetClassType getAssetClass() { return assetClass; }
 }
