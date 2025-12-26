@@ -3,24 +3,18 @@ package com.example.demo.servlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.ServletException;
 
 import java.io.IOException;
 
-/**
- * Simple servlet required by automated test suite
- * URL: /status
- * Method: GET
- * Response: OK
- */
-@WebServlet("/status")
 public class SimpleStatusServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    protected void doGet(HttpServletRequest req,
+                         HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        response.setContentType("text/plain");
-        response.getWriter().write("OK");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write("OK");
     }
 }

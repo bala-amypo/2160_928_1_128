@@ -1,17 +1,12 @@
 package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
-import com.example.demo.entity.enums.RoleType;
 import com.example.demo.repository.UserAccountRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -23,22 +18,23 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount userAccount = userAccountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
 
-        return User.builder()
-                .username(userAccount.getUsername())
-                .password(userAccount.getPassword())
-                .authorities(getAuthorities(userAccount.getRole()))
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
-    }
+        UserAccount user = userAccountRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found"));
 
-    private List<SimpleGrantedAuthority> getAuthorities(RoleType role) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return new User(
+                user.getEmail(),
+                user.getPassword(),
+                user.getActive(),
+                true,
+                true,
+                true,
+                Collections.singletonList(
+                        new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
+                )
+        );
     }
 }
