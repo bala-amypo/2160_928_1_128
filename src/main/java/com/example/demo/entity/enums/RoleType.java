@@ -1,4 +1,4 @@
-package com.example.demo.entityenums;
+package com.example.demo.entity.enums;
 
 /**
  * User roles for JWT secured access
