@@ -15,6 +15,10 @@ public class HoldingRecordServiceImpl {
     }
 
     public HoldingRecord recordHolding(HoldingRecord holding) {
+        // Validation moved here
+        if (holding.getCurrentValue() <= 0) {
+            throw new IllegalArgumentException("Value must be > 0");
+        }
         return repository.save(holding);
     }
 

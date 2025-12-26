@@ -15,6 +15,10 @@ public class RebalancingAlertServiceImpl {
     }
 
     public RebalancingAlertRecord createAlert(RebalancingAlertRecord alert) {
+        // Validation moved here
+        if (alert.getCurrentPercentage() <= alert.getTargetPercentage()) {
+            throw new IllegalArgumentException("currentPercentage > targetPercentage check failed");
+        }
         return repository.save(alert);
     }
 
