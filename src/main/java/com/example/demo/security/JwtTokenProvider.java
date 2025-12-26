@@ -4,44 +4,37 @@ import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
 
-    private final Key key;
-    private final long validityInMs;
+    private final SecretKey key;
+    private final long validityInMilliseconds;
 
-    public JwtTokenProvider(String secret, long validityInMs) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.validityInMs = validityInMs;
+    // Constructor used by Test Setup
+    public JwtTokenProvider(String secret, long validityInMilliseconds) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = validityInMilliseconds;
     }
 
     public String generateToken(Authentication authentication, UserAccount user) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMs);
+        Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(user.getUsername())
                 .claim("userId", user.getId())
-                .claim("role", user.getRole().name())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole())
                 .setIssuedAt(now)
-                .setExpiration(expiry)
+                .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
     public String getUsernameFromToken(String token) {
@@ -51,5 +44,14 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }

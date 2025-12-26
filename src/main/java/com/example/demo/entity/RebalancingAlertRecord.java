@@ -1,31 +1,35 @@
-@Entity
-public class RebalancingAlertRecord {
+package com.example.demo.entity;
 
+import com.example.demo.entity.enums.AlertSeverity;
+import com.example.demo.entity.enums.AssetClassType;
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@NoArgsConstructor
+public class RebalancingAlertRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long investorId;
-
     @Enumerated(EnumType.STRING)
     private AssetClassType assetClass;
-
     private Double currentPercentage;
     private Double targetPercentage;
-
     @Enumerated(EnumType.STRING)
     private AlertSeverity severity;
-
     private String message;
     private LocalDateTime alertDate;
-    private Boolean resolved = false;
+    private Boolean resolved;
 
-    public RebalancingAlertRecord() {}
-
-    public RebalancingAlertRecord(Long investorId, AssetClassType assetClass,
-                                  Double currentPercentage, Double targetPercentage,
-                                  AlertSeverity severity, String message,
+    public RebalancingAlertRecord(Long investorId, AssetClassType assetClass, Double currentPercentage, 
+                                  Double targetPercentage, AlertSeverity severity, String message, 
                                   LocalDateTime alertDate, Boolean resolved) {
+        if (currentPercentage <= targetPercentage) {
+            throw new IllegalArgumentException("currentPercentage > targetPercentage check failed");
+        }
         this.investorId = investorId;
         this.assetClass = assetClass;
         this.currentPercentage = currentPercentage;
@@ -33,17 +37,6 @@ public class RebalancingAlertRecord {
         this.severity = severity;
         this.message = message;
         this.alertDate = alertDate;
-        this.resolved = resolved;
+        this.resolved = resolved != null ? resolved : false;
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Double getCurrentPercentage() { return currentPercentage; }
-    public Double getTargetPercentage() { return targetPercentage; }
-
-    public Boolean getResolved() { return resolved; }
-    public void setResolved(Boolean resolved) { this.resolved = resolved; }
-
-    public AssetClassType getAssetClass() { return assetClass; }
 }
