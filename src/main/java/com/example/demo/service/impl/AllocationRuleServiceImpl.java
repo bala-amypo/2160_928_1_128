@@ -1,4 +1,4 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.AssetClassAllocationRule;
 import com.example.demo.repository.AssetClassAllocationRuleRepository;
