@@ -5,7 +5,10 @@ import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
-import org.springframework.security.authentication.*;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +33,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
-        Authentication auth = authManager.authenticate(
+
+        Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
-        UserAccount user = userRepo.findByEmail(request.getEmail()).orElseThrow();
-        String token = tokenProvider.generateToken(auth, user);
+        UserAccount user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new AuthResponse(token, user.getId(),
-                user.getEmail(), user.getRole().name());
+        String token = tokenProvider.generateToken(authentication, user);
+
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }
