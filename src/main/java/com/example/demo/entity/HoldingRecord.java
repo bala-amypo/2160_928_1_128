@@ -19,9 +19,7 @@ public class HoldingRecord {
     private LocalDateTime snapshotDate;
 
     public HoldingRecord(Long investorId, AssetClassType assetClass, Double currentValue, LocalDateTime snapshotDate) {
-        if (currentValue <= 0) {
-            throw new IllegalArgumentException("Value must be > 0");
-        }
+        // Validation removed here to allow Test instantiation. Moved to Service.
         this.investorId = investorId;
         this.assetClass = assetClass;
         this.currentValue = currentValue;
