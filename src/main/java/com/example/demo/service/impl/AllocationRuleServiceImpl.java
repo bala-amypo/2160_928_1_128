@@ -24,13 +24,11 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
     @Override
     public AssetClassAllocationRule updateRule(Long id, AssetClassAllocationRule updatedRule) {
         AssetClassAllocationRule existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found: " + id));
 
         validatePercentage(updatedRule.getTargetPercentage());
-
         existing.setTargetPercentage(updatedRule.getTargetPercentage());
         existing.setActive(updatedRule.getActive());
-        existing.setAssetClass(updatedRule.getAssetClass());
 
         return repository.save(existing);
     }
@@ -42,18 +40,18 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getActiveRules(Long investorId) {
-        return repository.findActiveRulesHql(investorId);
+        return repository.findByInvestorIdAndActiveTrue(investorId);
     }
 
     @Override
     public AssetClassAllocationRule getRuleById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found: " + id));
     }
 
     private void validatePercentage(Double value) {
-        if (value == null || value < 0 || value > 100) {
-            throw new IllegalArgumentException("targetPercentage must be between 0 and 100");
+        if (value < 0 || value > 100) {
+            throw new IllegalArgumentException("Percentage must be between 0 and 100");
         }
     }
 }

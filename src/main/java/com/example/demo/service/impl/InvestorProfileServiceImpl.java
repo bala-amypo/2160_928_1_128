@@ -27,7 +27,7 @@ public class InvestorProfileServiceImpl implements InvestorProfileService {
     @Override
     public InvestorProfile getInvestorById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Investor not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Investor not found: " + id));
     }
 
     @Override
