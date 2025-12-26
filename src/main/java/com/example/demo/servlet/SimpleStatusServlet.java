@@ -1,20 +1,19 @@
-package com.example.demo.servlet;
+package com.example.demo;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.ServletException;
+import com.example.demo.servlet.SimpleStatusServlet;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
-import java.io.IOException;
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
-public class SimpleStatusServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req,
-                         HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().write("OK");
+    @Bean
+    public ServletRegistrationBean<SimpleStatusServlet> statusServlet() {
+        return new ServletRegistrationBean<>(new SimpleStatusServlet(), "/status");
     }
 }

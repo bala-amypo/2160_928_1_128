@@ -1,36 +1,32 @@
-@Entity
-public class InvestorProfile {
+package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class InvestorProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String investorId;
     private String fullName;
+    @Column(unique = true)
     private String email;
     private Boolean active = true;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    public InvestorProfile() {}
-
+    // Constructor for Test Convenience
     public InvestorProfile(String investorId, String fullName, String email, Boolean active) {
         this.investorId = investorId;
         this.fullName = fullName;
         this.email = email;
-        this.active = active;
+        this.active = active != null ? active : true;
+        this.createdAt = LocalDateTime.now();
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getInvestorId() { return investorId; }
-    public void setInvestorId(String investorId) { this.investorId = investorId; }
-
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
 }
