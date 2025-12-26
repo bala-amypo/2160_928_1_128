@@ -1,4 +1,4 @@
-package com.example.demo.entity.enums;
+package com.example.demo.entity.entityenums;
 
 /**
  * Severity levels for rebalancing alerts
